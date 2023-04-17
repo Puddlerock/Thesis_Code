@@ -1,0 +1,43 @@
+#########################################################################################################
+#The seasonal Kendall test is a non-parametric statistical test used to determine if 
+#there is a monotonic trend (either increasing or decreasing) in a time series data over a certain period of time.
+
+##########################################################################################################
+#Thesis, Melissa Murgittroyd, created 4/17/23
+#site: CTNHG
+#test: SK
+
+##########################################################################################################
+!pip install pymannkendall
+import pandas as pd
+from pymannkendall import seasonal_test
+
+file_path = "/content/ctnhgClean.csv"
+ctnhg = pd.read_csv(file_path)
+#print (data)
+
+# Read the CSV file into a Pandas DataFrame
+ctnhg_df = pd.read_csv('/content/ctnhgClean.csv', header=None)
+
+# Select the second column (index 1) to use as the values column
+values_column = ctnhg_df.iloc[:, 1]
+
+# Perform seasonal Kendall test on the values column
+result = seasonal_test(values_column, period=12)  # set period to the length of the seasonal cycle
+print('Seasonal-Kendall Test Result:')
+print('Trend:', result.trend)
+print('P-value:', result.p)
+print(result)
+
+#trend='decreasing': This indicates that there is a decreasing trend in the data over the analyzed period.
+#h=True: This means that the null hypothesis of no trend is rejected, and there is significant evidence of a monotonic trend in the data.
+#p=2.73625246904885e-08: This is the p-value associated with the test. It is very small, which indicates strong evidence against the null hypothesis. In other words, the results are unlikely to be due to chance.
+#z=-5.557525992738783: This is the test statistic, which measures the deviation of the observed data from the expected data under the null hypothesis. A large negative value of the test statistic, such as the one obtained here, indicates a strong evidence against the null hypothesis of no trend.
+#Tau=-0.2785793562708102: This is Kendall's Tau correlation coefficient, which measures the strength and direction of the monotonic trend. A negative value of Tau indicates a decreasing trend.
+#s=-502.0: This is the total number of discordant pairs in the data. A discordant pair is a pair of data points where one is higher and the other is lower than the other in one time period but the opposite in another time period.
+#var_s=8126.666666666666: This is the estimated variance of the discordant pairs. It is used to calculate the test statistic and p-value.
+#slope=-0.013738636363636363: This is the estimated slope of the trend line. It indicates the rate at which the data is decreasing over time.
+#intercept=0.5619303977272727: This is the estimated intercept of the trend line. It indicates the value of the data at the starting time period.
+#Overall, the results suggest that there is a significant decreasing trend in the time series data over the analyzed period, with strong evidence against the null hypothesis of no trend. The estimated slope and intercept can be used to plot the trend line and make predictions about future values of the data."""
+
+
