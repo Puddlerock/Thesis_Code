@@ -1,0 +1,131 @@
+#####
+#Thesis, Melissa Murgittroyd, created 4/18/23
+#complete a mann kendall analysis on ctnbg for 2002-2022
+#includes missing rows of data, which import at NAN
+#MK can handle missing data
+#removed true failures/errors in data
+#change column headers to Date and totalNitrogen
+
+##missing 23 TN values from the dataset- imported as NAN's 
+
+# MANN KENDALL 
+
+#####
+#import packages
+import pandas as pd
+import numpy as np
+import calendar
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+!pip install pymannkendall
+from pymannkendall import seasonal_test
+from pymannkendall import original_test
+from scipy.stats import kendalltau
+
+#dump csv into files into colab 
+
+# identify path /content/CTNBG_20_missinginc.csv
+file_path = "/content/CTNBG_20_missinginc.csv"
+ctnbg = pd.read_csv(file_path) #read csv into dataframe 
+print (ctnbg)
+
+#check for missing data in each column 
+#column names:date = Date, nitrate = totalNitrogen
+for col in ctnbg.columns:
+    missing =  np.sum(ctnbg[col].isnull())
+    print(col, missing)
+#31 missing TN points
+
+# Check data types
+ctnbg.dtypes  # date = object, TN = float64
+
+###############################################################################
+#analysis
+
+data = pd.read_csv('/content/CTNBG_20_missinginc.csv')
+#print(data)
+
+#convert date column to datetime format
+data['Date'] = pd.to_datetime(data['Date'])
+
+#set the date column as the index 
+data.set_index('Date', inplace=True)
+result = original_test(data['totalNitrogen'])
+print(result)
+
+#Mann_Kendall_Test(trend='decreasing', h=True, p=2.0539125955565396e-13, 
+#z=-7.345304793571005, Tau=-0.3253464970571483, s=-8568.0, 
+#var_s=1360310.0, slope=-0.0015217391304347835, intercept=0.6218478260869567)
+
+
+############################################################################################################
+
+
+#####
+#Thesis, Melissa Murgittroyd, created 4/18/23
+#complete a mann kendall analysis on ctnbg for 2002-2022
+#includes missing rows of data, which import at NAN
+#MK can handle missing data
+#removed true failures/errors in data
+#change column headers to Date and totalNitrogen
+
+##missing 23 TN values from the dataset- imported as NAN's 
+
+### SEASONAL KENDALL 
+
+#####
+#import packages
+import pandas as pd
+import numpy as np
+import calendar
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+!pip install pymannkendall
+from pymannkendall import seasonal_test
+from pymannkendall import original_test
+from scipy.stats import kendalltau
+
+#dump csv into files into colab 
+
+# identify path /content/CTNBG_20_missinginc.csv
+file_path = "/content/CTNBG_20_missinginc.csv"
+ctnbg = pd.read_csv(file_path) #read csv into dataframe 
+print (ctnbg)
+
+#check for missing data in each column 
+#column names:date = Date, nitrate = totalNitrogen
+for col in ctnbg.columns:
+    missing =  np.sum(ctnbg[col].isnull())
+    print(col, missing)
+#31 missing TN points
+
+# Check data types
+ctnbg.dtypes  # date = object, TN = float64
+
+###############################################################################
+#analysis
+
+data = pd.read_csv('/content/CTNBG_20_missinginc.csv')
+#print(data)
+
+#convert date column to datetime format
+data['Date'] = pd.to_datetime(data['Date'])
+
+#set the date column as the index 
+data.set_index('Date', inplace=True)
+result = seasonal_test(data['totalNitrogen'], period = 12)
+print(result)
+
+
+#Seasonal_Mann_Kendall_Test(trend='decreasing', h=True, p=0.0, 
+#z=-9.560747626103952, Tau=-0.4594465648854962, s=-963.0, 
+#var_s=10124.333333333332, slope=-0.018750000000000003, intercept=0.62671875)
+
+#p=0.0: This is the p-value of the test, which is a measure of the probability
+# of obtaining the observed results (or more extreme results) if the null 
+#hypothesis is true. A p-value of 0.0 indicates that the observed results 
+#are extremely unlikely to occur if there is no trend in the data.
