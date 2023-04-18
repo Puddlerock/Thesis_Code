@@ -1,0 +1,150 @@
+##############################################################################
+#4/18/23, Murgittroyd, CTNHG, 2002-2022, retains missing rows, removed errors
+#209 actual values, 240 expected, 12% of data missing due to covid mostly (31 values missing)
+#252 rows, 2 columns
+
+#MANN KENDALL 
+
+#import packages for analysis
+import pandas as pd
+import numpy as np
+import calendar
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import pymannkendall
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+!pip install pymannkendall
+from pymannkendall import seasonal_test
+from pymannkendall import original_test
+from scipy.stats import kendalltau
+
+#dump csv into files into colab 
+
+# identify path /content/CTNHG_20_missinginc.csv
+file_path = "/content/CTNHG_20_missinginc.csv"
+ctnhg = pd.read_csv(file_path) #read csv into dataframe 
+print (ctnhg)
+
+#check for missing data in each column 
+#column names:date = Date, nitrate = totalNitrogen
+for col in ctnhg.columns:
+    missing =  np.sum(ctnhg[col].isnull())
+    print(col, missing)
+#31 missing TN points
+
+# Check data types
+ctnhg.dtypes  # date = object, TN = float64
+
+###############################################################################
+#analysis
+
+data = pd.read_csv('/content/CTNHG_20_missinginc.csv')
+#print(data)
+
+#convert date column to datetime format
+data['Date'] = pd.to_datetime(data['Date'])
+
+#set the date column as the index 
+data.set_index('Date', inplace=True)
+result = original_test(data['totalNitrogen'])
+print(result)
+
+#trend='decreasing', h=True, p=8.152102926040072e-08, z=-5.363729342299482, 
+#Tau=-0.24245166598107776, s=-5894.0, var_s=1207088.6666666667, 
+#slope=-0.0009406969309462915, intercept=0.5610022378516624
+
+#trend='decreasing': This means that there is a decreasing trend in the Nitrate values over time.
+#h=True: This indicates that the test result is significant at a 95% confidence level, which means that we can reject the null hypothesis that there is no trend in the data.
+#p=8.152102926040072e-08: This is the p-value of the Mann-Kendall test, which is the probability of obtaining a test statistic as extreme as the one observed, assuming the null hypothesis is true. In this case, the p-value is very small (less than 0.05), which supports the rejection of the null hypothesis.
+#z=-5.363729342299482: This is the z-score of the test statistic, which is a measure of how many standard deviations the observed value is from the mean.
+#Tau=-0.24245166598107776: This is the Kendall's Tau value, which measures the strength of association between two variables. In this case, the negative value indicates a negative correlation between Nitrate values and time.
+#s=-5894.0: This is the Mann-Kendall test statistic, which is a measure of the difference between the number of concordant and discordant pairs in the data.
+#var_s=1207088.6666666667: This is the variance of the Mann-Kendall test statistic.
+#slope=-0.0009406969309462915: This is the slope of the linear regression line fitted to the Nitrate values over time, which represents the rate of change in Nitrate values per unit time.
+#intercept=0.5610022378516624: This is the intercept of the linear regression line, which represents the Nitrate value at the starting point of the time series.
+
+
+
+
+
+##############################################################################
+#4/18/23, Murgittroyd, CTNHG, 2002-2022, retains missing rows, removed errors
+#209 actual values, 240 expected, 12% of data missing due to covid mostly (31 values missing)
+#252 rows, 2 columns
+
+## SEASONAL KENDALL
+
+#import packages for analysis
+import pandas as pd
+import numpy as np
+import calendar
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import pymannkendall
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+!pip install pymannkendall
+from pymannkendall import seasonal_test
+from pymannkendall import original_test
+from scipy.stats import kendalltau
+
+#dump csv into files into colab 
+
+# identify path /content/CTNHG_20_missinginc.csv
+file_path = "/content/CTNHG_20_missinginc.csv"
+ctnhg = pd.read_csv(file_path) #read csv into dataframe 
+print (ctnhg)
+
+#check for missing data in each column 
+#column names:date = Date, nitrate = totalNitrogen
+for col in ctnhg.columns:
+    missing =  np.sum(ctnhg[col].isnull())
+    print(col, missing)
+#31 missing TN points
+
+# Check data types
+ctnhg.dtypes  # date = object, TN = float64
+
+###############################################################################
+#analysis
+
+data = pd.read_csv('/content/CTNHG_20_missinginc.csv')
+#print(data)
+
+#convert date column to datetime format
+data['Date'] = pd.to_datetime(data['Date'])
+
+#set the date column as the index 
+data.set_index('Date', inplace=True)
+result = seasonal_test(data['totalNitrogen'])
+print(result)
+
+##Seasonal_Mann_Kendall_Test(trend='decreasing', h=True, 
+#p=4.6148386756428295e-07, z=-5.041671141940743, Tau=-0.24805396990140113, 
+#s=-478.0, var_s=8951.333333333332, slope=-0.010111111111111107, 
+#intercept=0.5494259259259259)
+
+#explained:
+#trend='decreasing': This means that there is a decreasing trend in the Nitrate values over time.
+
+#h=True: This indicates that the test result is significant at a 95% confidence level, which means that we can reject the null hypothesis that there is no trend in the data.
+
+#p=4.6148386756428295e-07: This is the p-value of the Seasonal Kendall test, which is the probability of obtaining a test statistic as extreme as the one observed, assuming the null hypothesis is true. In this case, the p-value is very small (less than 0.05), which supports the rejection of the null hypothesis.
+
+#z=-5.041671141940743: This is the z-score of the test statistic, which is a measure of how many standard deviations the observed value is from the mean.
+
+#Tau=-0.24805396990140113: This is the Kendall's Tau value, which measures the strength of association between two variables. In this case, the negative value indicates a negative correlation between Nitrate values and time.
+
+##s=-478.0: This is the Seasonal Kendall test statistic, which is a measure of the difference between the number of concordant and discordant pairs in the data after removing the seasonal component.
+
+#var_s=8951.333333333332: This is the variance of the Seasonal Kendall test statistic.
+
+#slope=-0.010111111111111107: This is the slope of the linear regression line fitted to the Nitrate values after removing the seasonal component, which represents the rate of change in Nitrate values per unit time.
+
+#intercept=0.5494259259259259: This is the intercept of the linear regression line, which represents the Nitrate value at the starting point of the time series after removing the seasonal component.
+
+#Overall, the results indicate a statistically significant decreasing trend in the Nitrate values over time, even after accounting for the seasonal variation in the data. The slope of the linear regression line also indicates a significant negative rate of change in Nitrate values over time.
+
+
+
