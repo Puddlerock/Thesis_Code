@@ -1,0 +1,128 @@
+#####
+#Thesis, Melissa Murgittroyd, created 4/18/23
+#complete a mann kendall analysis on cdg for 2002-2022
+#includes missing rows of data, which import at NAN
+#MK can handle missing data
+#removed true failures/errors in data
+#change column headers to Date and totalNitrogen
+
+##missing 40 TN values from the dataset- imported as NAN's 
+
+### MANN KENDALL 
+
+#####
+#import packages
+import pandas as pd
+import numpy as np
+import calendar
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+!pip install pymannkendall
+from pymannkendall import seasonal_test
+from pymannkendall import original_test
+from scipy.stats import kendalltau
+
+#dump csv into files into colab 
+
+# identify path /content/CDG_20_incmissing.csv
+file_path = "/content/CDG_20_incmissing.csv"
+cdg = pd.read_csv(file_path) #read csv into dataframe 
+print (cdg)
+
+#check for missing data in each column 
+#column names:date = Date, nitrate = totalNitrogen
+for col in cdg.columns:
+    missing =  np.sum(cdg[col].isnull())
+    print(col, missing)
+#40 missing TN points
+
+# Check data types
+cdg.dtypes  # date = object, TN = float64
+
+###############################################################################
+#analysis
+
+data = pd.read_csv('/content/CDG_20_incmissing.csv')
+#print(data)
+
+#convert date column to datetime format
+data['Date'] = pd.to_datetime(data['Date'])
+
+#set the date column as the index 
+data.set_index('Date', inplace=True)
+result = original_test(data['totalNitrogen'])
+print(result)
+
+
+
+##Mann_Kendall_Test(trend='decreasing', h=True, p=9.021297042721699e-10, 
+#z=-6.12582844364524, Tau=-0.2821330498715564, s=-6370.0, 
+#var_s=1080968.0, slope=-0.001214079273327828, intercept=0.9117599091659785)
+
+#####################################################################################################################
+
+#####
+#Thesis, Melissa Murgittroyd, created 4/18/23
+#complete a seasonal kendall analysis on cdg for 2002-2022
+#includes missing rows of data, which import at NAN
+#MK/SK can handle missing data
+#removed true failures/errors in data
+#change column headers to Date and totalNitrogen
+
+##missing 40 TN values from the dataset- imported as NAN's 
+
+### SEASONAL KENDALL 
+
+#####
+#import packages
+import pandas as pd
+import numpy as np
+import calendar
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+!pip install pymannkendall
+from pymannkendall import seasonal_test
+from pymannkendall import original_test
+from scipy.stats import kendalltau
+
+#dump csv into files into colab 
+
+# identify path /content/CDG_20_incmissing.csv
+file_path = "/content/CDG_20_incmissing.csv"
+cdg = pd.read_csv(file_path) #read csv into dataframe 
+print (cdg)
+
+#check for missing data in each column 
+#column names:date = Date, nitrate = totalNitrogen
+for col in cdg.columns:
+    missing =  np.sum(cdg[col].isnull())
+    print(col, missing)
+#40 missing TN points
+
+# Check data types
+cdg.dtypes  # date = object, TN = float64
+
+###############################################################################
+#analysis
+
+data = pd.read_csv('/content/CDG_20_incmissing.csv')
+#print(data)
+
+#convert date column to datetime format
+data['Date'] = pd.to_datetime(data['Date'])
+
+#set the date column as the index 
+data.set_index('Date', inplace=True)
+result = seasonal_test(data['totalNitrogen'], period = 12)
+print(result)
+
+
+
+#Seasonal_Mann_Kendall_Test(trend='decreasing', h=True, p=7.72715225139109e-14,
+# z=-7.474905745178806, Tau=-0.3762541806020067, s=-675.0, 
+#var_s=8130.333333333333, slope=-0.015135714285714284, 
+#intercept=0.9176636904761905)
