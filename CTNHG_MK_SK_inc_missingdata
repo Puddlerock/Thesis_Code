@@ -117,7 +117,8 @@ data['Date'] = pd.to_datetime(data['Date'])
 
 #set the date column as the index 
 data.set_index('Date', inplace=True)
-result = seasonal_test(data['totalNitrogen'])
+result = seasonal_test(data['totalNitrogen'], period=12) #add the period
+#12 months = 12 seasons 
 print(result)
 
 ##Seasonal_Mann_Kendall_Test(trend='decreasing', h=True, 
