@@ -1,0 +1,130 @@
+#####
+#Thesis, Melissa Murgittroyd, created 4/20/23
+#complete a mann kendall analysis on WDBN & CBS for 2002-2022
+#includes missing rows of data, which import at NAN
+#MK can handle missing data
+#removed true failures/errors in data
+#took aggregates for monthly data to consilidate into 1 point
+#used a median function to get single monthly point 
+#change column headers to Date and totalNitrogen
+
+##missing 2 TN values from the dataset- imported as NAN's 
+
+### MANN KENDALL 
+
+#####
+#import packages
+import pandas as pd
+import numpy as np
+import calendar
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+!pip install pymannkendall
+from pymannkendall import seasonal_test
+from pymannkendall import original_test
+from scipy.stats import kendalltau
+
+#dump csv into files into colab 
+
+# identify path /content/WDBN_CBS_20_incmiss_clean.csv
+file_path = "/content/WDBN_CBS_20_incmiss_clean.csv"
+wdbn_cbs = pd.read_csv(file_path) #read csv into dataframe 
+print (wdbn_cbs)
+
+#check for missing data in each column 
+#column names:date = Date, nitrate = totalNitrogen
+for col in wdbn_cbs.columns:
+    missing =  np.sum(wdbn_cbs[col].isnull())
+    print(col, missing)
+#missing 2 TN points
+
+# Check data types
+wdbn_cbs.dtypes  # date = object, TN = float64
+
+###############################################################################
+#analysis
+
+data = pd.read_csv('/content/WDBN_CBS_20_incmiss_clean.csv')
+#print(data)
+
+#convert date column to datetime format
+data['Date'] = pd.to_datetime(data['Date'])
+
+#set the date column as the index 
+data.set_index('Date', inplace=True)
+result = original_test(data['totalNitrogen'])
+print(result)
+
+
+
+#Mann_Kendall_Test(trend='decreasing', h=True, p=0.006697944884564988, 
+#z=-2.711500456441497, Tau=-0.11514859437751004, 
+#s=-3584.0, var_s=1746120.6666666667, slope=-0.0004835680751173708, 
+#intercept=0.6902042253521127)
+
+#####################################################################################################################
+
+#####
+#Thesis, Melissa Murgittroyd, created 4/18/23
+#complete a seasonal kendall analysis on WDBN_CBS for 2002-2022
+#includes missing rows of data, which import at NAN
+#MK/SK can handle missing data
+#removed true failures/errors in data
+#change column headers to Date and totalNitrogen
+#took aggregates for monthly data to consilidate into 1 point
+#used a median function to get single monthly point
+##missing 2 TN values from the dataset- imported as NAN's 
+
+### SEASONAL KENDALL 
+
+#####
+#import packages
+import pandas as pd
+import numpy as np
+import calendar
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+!pip install pymannkendall
+from pymannkendall import seasonal_test
+from pymannkendall import original_test
+from scipy.stats import kendalltau
+
+#dump csv into files into colab 
+
+# identify path /content/WDBN_CBS_20_incmiss_clean.csv
+file_path = "/content/WDBN_CBS_20_incmiss_clean.csv"
+wdbn_cbs = pd.read_csv(file_path) #read csv into dataframe 
+print (wdbn_cbs)
+
+#check for missing data in each column 
+#column names:date = Date, nitrate = totalNitrogen
+for col in wdbn_cbs.columns:
+    missing =  np.sum(wdbn_cbs[col].isnull())
+    print(col, missing)
+#2 missing TN points
+
+# Check data types
+wdbn_cbs.dtypes  # date = object, TN = float64
+
+###############################################################################
+#analysis
+
+data = pd.read_csv('/content/WDBN_CBS_20_incmiss_clean.csv')
+#print(data)
+
+#convert date column to datetime format
+data['Date'] = pd.to_datetime(data['Date'])
+
+#set the date column as the index 
+data.set_index('Date', inplace=True)
+result = seasonal_test(data['totalNitrogen'], period = 12)
+print(result)
+
+#Seasonal_Mann_Kendall_Test(trend='decreasing', h=True, p=0.0009088641160988065,
+# z=-3.317317065321082, Tau=-0.15201612903225806, 
+#s=-377.0, var_s=12846.999999999998, slope=-0.006363636363636361,
+# intercept=0.6960227272727273)
