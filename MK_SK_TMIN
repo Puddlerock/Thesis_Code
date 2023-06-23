@@ -1,0 +1,89 @@
+##############################################################################
+#6/23/23, Murgittroyd, CTNHG, 2002-2022, 
+# climate data analysis MANN
+
+#MANN KENDALL 
+
+#prep data in CSV, save as CSV, copy into colab
+#date/time change to format 01/01/0202
+
+#import packages for analysis
+import pandas as pd
+import numpy as np
+import calendar
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+
+from pymannkendall import seasonal_test
+from pymannkendall import original_test
+from scipy.stats import kendalltau
+
+#dump csv into files into colab 
+
+# identify path 
+file_path = "/content/delhi_temp_prcp.csv"
+ctnhg = pd.read_csv(file_path) #read csv into dataframe 
+print (ctnhg)
+
+
+###############################################################################
+#analysis
+
+data = pd.read_csv('/content/delhi_temp_prcp.csv')
+#print(data)
+
+#convert date column to datetime format
+data['DATE'] = pd.to_datetime(data['DATE'])
+
+#set the date column as the index 
+data.set_index('DATE', inplace=True)
+result = original_test(data['TMIN'])
+print(result)
+
+
+##############################################################################
+#6/23/23, Murgittroyd, CTNHG, 2002-2022, 
+# climate data analysis SEASONAL
+
+## SEASONAL KENDALL
+
+#import packages for analysis
+import pandas as pd
+import numpy as np
+import calendar
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import pymannkendall
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+!pip install pymannkendall
+from pymannkendall import seasonal_test
+from pymannkendall import original_test
+from scipy.stats import kendalltau
+
+#dump csv into files into colab 
+
+# identify path 
+file_path = "/content/delhi_temp_prcp.csv"
+ctnhg = pd.read_csv(file_path) #read csv into dataframe 
+print (ctnhg)
+
+###############################################################################
+#analysis
+
+data = pd.read_csv('/content/delhi_temp_prcp.csv')
+#print(data)
+
+#convert date column to datetime format
+data['DATE'] = pd.to_datetime(data['DATE'])
+
+#set the date column as the index 
+data.set_index('DATE', inplace=True)
+result = seasonal_test(data['TMIN'], period=12) #add the period
+#12 months = 12 seasons 
+print(result)
+
+
